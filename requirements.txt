@@ -1,4 +1,4 @@
-pvlib
+streamlit
 pandas
 numpy
 matplotlib
@@ -6,10 +6,11 @@ trimesh
 shapely
 geopandas
 pyproj
-streamlit
-reportlab
+pvlib-python
 ezdxf
-numba
-timezonefinder
+PyYAML
+reportlab
 tqdm
 scipy
+numba
+timezonefinder
