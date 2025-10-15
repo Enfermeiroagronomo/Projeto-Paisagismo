@@ -6,7 +6,7 @@ trimesh
 shapely
 geopandas
 pyproj
-pvlib-python
+pvlib
 ezdxf
 PyYAML
 reportlab
@@ -14,3 +14,4 @@ tqdm
 scipy
 numba
 timezonefinder
+
