@@ -38,22 +38,6 @@ st.title("☀️ Análise Solar para Planejamento Paisagístico")
 
 with st.sidebar:
     st.header("Parâmetros da Simulação")
-
-    # <<< MUDANÇA AQUI: Adicionamos campos para as coordenadas >>>
-    st.subheader("Localização")
-    lat_input = st.number_input(
-        "Latitude",
-        value=config['location']['latitude'],
-        format="%.6f"
-    )
-    lon_input = st.number_input(
-        "Longitude",
-        value=config['location']['longitude'],
-        format="%.6f"
-    )
-    # Fim da mudança de coordenadas
-
-    st.subheader("Período")
     sim_type = st.radio("Tipo de Simulação", ('Anual', 'Data Específica'), index=1)
     
     if sim_type == 'Anual':
@@ -66,40 +50,31 @@ with st.sidebar:
     freq = st.select_slider("Frequência", options=['1H', '30min', '15min'], value='30min')
     run_button = st.button("Executar Simulação", type="primary")
 
-# <<< MUDANÇA AQUI: Usamos as coordenadas da interface no título >>>
-st.markdown(f"Análise para **Lat: {lat_input:.4f}, Lon: {lon_input:.4f}**")
-
 if run_button:
-    # Mostra uma mensagem enquanto prepara
-    with st.spinner("Preparando simulação..."):
-        area = create_circular_area(config['scene']['radius_m'])
-        grid_points = create_grid_points(area, config['scene']['grid_resolution_m'])
-        
-        # <<< MUDANÇA AQUI: Usamos as coordenadas da interface na simulação >>>
-        solar_pos = get_solar_position(
-            lat_input, lon_input,
-            config['location']['timezone'], str(start_date), str(end_date), freq
-        )
+    area = create_circular_area(config['scene']['radius_m'])
+    grid_points = create_grid_points(area, config['scene']['grid_resolution_m'])
     
-    if solar_pos.empty:
-        st.error("Não há dados solares para o período selecionado (provavelmente é sempre noite). Por favor, escolha outra data.")
+    solar_pos = get_solar_position(
+        config['location']['latitude'], config['location']['longitude'],
+        config['location']['timezone'], str(start_date), str(end_date), freq
+    )
+    
+    results_df = run_full_simulation(config, solar_pos, grid_points)
+    
+    freq_min = pd.to_timedelta(freq).total_seconds() / 60
+    total_sun_hours = calculate_sun_hours(results_df, freq_min)
+    
+    if sim_type == 'Anual':
+        num_days = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
+        st.session_state.sun_hours = total_sun_hours / num_days
     else:
-        results_df = run_full_simulation(config, solar_pos, grid_points)
+        st.session_state.sun_hours = total_sun_hours
         
-        freq_min = pd.to_timedelta(freq).total_seconds() / 60
-        total_sun_hours = calculate_sun_hours(results_df, freq_min)
-        
-        if sim_type == 'Anual':
-            num_days = (pd.to_datetime(end_date) - pd.to_datetime(start_date)).days + 1
-            st.session_state.sun_hours = total_sun_hours / num_days
-        else:
-            st.session_state.sun_hours = total_sun_hours
-            
-        st.session_state.grid_points = grid_points
-        st.success("Simulação Concluída!")
-        
-        st.session_state.heatmap_file = create_heatmap(grid_points, st.session_state.sun_hours, config['scene']['grid_resolution_m'], config['scene']['radius_m'])
-        st.session_state.plan_file = create_planting_plan(grid_points, st.session_state.sun_hours, plant_catalog, config['luminosity_classes'], config['scene']['radius_m'])
+    st.session_state.grid_points = grid_points
+    st.success("Simulação Concluída!")
+    
+    st.session_state.heatmap_file = create_heatmap(grid_points, st.session_state.sun_hours, config['scene']['grid_resolution_m'], config['scene']['radius_m'])
+    st.session_state.plan_file = create_planting_plan(grid_points, st.session_state.sun_hours, plant_catalog, config['luminosity_classes'], config['scene']['radius_m'])
 
 if st.session_state.sun_hours is not None:
     st.header("Resultados")
@@ -112,7 +87,7 @@ if st.session_state.sun_hours is not None:
             st.image(st.session_state.plan_file, caption="Planta Baixa Sugerida")
 
     results_data = pd.DataFrame({'x': st.session_state.grid_points[:, 0], 'y': st.session_state.grid_points[:, 1], 'sun_hours': st.session_state.sun_hours})
-    st.download_button("Baixar Dados (CSV)", results_data.to_csv(index=False).encode('utf-8'), "solar_data.csv", "text/csv")
+    st.download_button("Baixar Dados (CSV)", results_data.to_csv(index=False), "solar_data.csv", "text/csv")
     
     dxf_filename = os.path.join(config['output']['directory'], "layout.dxf")
     export_to_dxf(results_data, config, dxf_filename)
