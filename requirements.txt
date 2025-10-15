@@ -1,0 +1,15 @@
+pvlib
+pandas
+numpy
+matplotlib
+trimesh
+shapely
+geopandas
+pyproj
+streamlit
+reportlab
+ezdxf
+numba
+timezonefinder
+tqdm
+scipy

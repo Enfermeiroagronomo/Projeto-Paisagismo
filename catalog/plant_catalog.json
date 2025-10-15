@@ -1,0 +1,38 @@
+[
+  {
+    "botanical_name": "Delonix regia",
+    "common_name": "Flamboyant",
+    "type": "Tree",
+    "luminosity_requirement": "full_sun",
+    "description": "Árvore de copa ampla e flores vermelhas vibrantes. Usada como árvore central neste projeto.",
+    "is_central_element": true
+  },
+  {
+    "botanical_name": "Lantana camara",
+    "common_name": "Lantana",
+    "type": "Shrub",
+    "luminosity_requirement": "full_sun",
+    "description": "Arbusto rústico e florífero, atrai borboletas."
+  },
+  {
+    "botanical_name": "Spathiphyllum wallisii",
+    "common_name": "Lírio-da-paz",
+    "type": "Herbaceous",
+    "luminosity_requirement": "full_shade",
+    "description": "Planta de folhagem verde-escura e flores brancas, ideal para locais sombreados."
+  },
+  {
+    "botanical_name": "Clivia miniata",
+    "common_name": "Clívia",
+    "type": "Herbaceous",
+    "luminosity_requirement": "partial_shade",
+    "description": "Floresce em tons de laranja e amarelo, perfeita para meia-sombra."
+  },
+  {
+    "botanical_name": "Heuchera spp.",
+    "common_name": "Heuchera",
+    "type": "Perennial",
+    "luminosity_requirement": "partial_shade",
+    "description": "Folhagem colorida em tons de roxo, verde e bronze. Sensível ao sol forte do meio-dia."
+  }
+]

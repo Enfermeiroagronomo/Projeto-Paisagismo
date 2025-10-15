@@ -1,0 +1,47 @@
+# 1. Informações do Local
+location:
+  latitude: -22.708420
+  longitude: -47.629301
+  altitude: 547
+  timezone: "America/Sao_Paulo"
+  name: "Piracicaba, SP, Brazil"
+
+# 2. Área do Projeto
+scene:
+  radius_m: 5.0
+  grid_resolution_m: 0.25
+
+# 3. Especificações da Árvore
+tree:
+  trunk:
+    radius_m: 0.25
+    height_m: 2.5
+  canopy:
+    x_radius_m: 4.0
+    y_radius_m: 4.0
+    z_radius_m: 3.0
+    vertical_offset_m: 2.5
+
+# 4. Parâmetros da Simulação
+simulation:
+  freq: "15min"
+  use_multiprocessing: true
+  cpu_cores: null
+
+# 5. Configurações de Saída
+output:
+  directory: "output"
+  heatmap_dpi: 300
+
+# 6. Classificação de Luminosidade (horas/dia)
+luminosity_classes:
+  full_sun:
+    min_hours: 6
+    description: "Sol Pleno"
+  partial_shade:
+    min_hours: 3
+    max_hours: 6
+    description: "Meia Sombra"
+  full_shade:
+    max_hours: 3
+    description: "Sombra Plena"
